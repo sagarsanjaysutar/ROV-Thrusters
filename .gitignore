@@ -1,0 +1,11 @@
+# ROS2 / colcon build artifacts
+build/
+install/
+log/
+
+# VSCode / editor junk (optional)
+.vscode/
+*.swp
+*.user
+*.pyc
+.DS_Store
