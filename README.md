@@ -37,10 +37,10 @@ The following 2 thrusters control the vertical movement i.e roll & hieve.
 ## ROV Movement
 
 - w / s → Surge (forward / backward)
-- a / d → Sway (left / right)
+- a / d → Sway (right / left)
+- u / o → Yaw (left / right turn around vertical axis)
 - q / e → Heave (up / down)
 - j / l → Roll (left / right)
-- u / o → Yaw (left / right turn around vertical axis)
 
 ## Running the project
 
