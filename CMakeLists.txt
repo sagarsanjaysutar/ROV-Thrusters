@@ -9,13 +9,20 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(mavros_msgs REQUIRED)
 
 
 add_executable(thruster_control src/ThrusterControl.cpp)
-ament_target_dependencies(thruster_control rclcpp geometry_msgs mavros_msgs)
+ament_target_dependencies(thruster_control rclcpp mavros_msgs geometry_msgs)
+
+add_executable(web_cam_publisher src/WebCamPublisher.cpp)
+ament_target_dependencies(web_cam_publisher rclcpp sensor_msgs cv_bridge)
 
 install(TARGETS thruster_control DESTINATION lib/${PROJECT_NAME})
+install(TARGETS web_cam_publisher DESTINATION lib/${PROJECT_NAME})
+
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 
 ament_package()
