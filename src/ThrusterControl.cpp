@@ -18,7 +18,7 @@ using namespace std;
 class ThrusterControl : public rclcpp::Node
 {
 public:
-    ThrusterControl() : Node("mavros_bridge"), m_isArmed(false), m_isGuided(false)
+    ThrusterControl() : Node("mavros_bridge"), m_isArmed(false), m_isGuided(false), m_isManual(false)
     {
         RCLCPP_INFO(this->get_logger(), "ThrusterControl Node starting...");
 
@@ -149,9 +149,11 @@ private:
     {
         m_isArmed = state.get()->armed;
         m_isGuided = state.get()->guided;
+        m_isManual = state.get()->manual_input;
 
         RCLCPP_INFO(this->get_logger(), "Mavros State Armed: %s", m_isArmed ? "true" : "false");
         RCLCPP_INFO(this->get_logger(), "Mavros State Guided: %s", m_isGuided ? "true" : "false");
+        RCLCPP_INFO(this->get_logger(), "Mavros State Manual: %s", m_isManual ? "true" : "false");
 
         if (!m_isArmed)
         {
@@ -160,10 +162,16 @@ private:
             m_armingClient->async_send_request(armingRequest);
         }
 
-        if (!m_isGuided)
+        // if (!m_isGuided)
+        // {
+        //     std::shared_ptr<mavros_msgs::srv::SetMode::Request> guidedRequest = std::make_shared<mavros_msgs::srv::SetMode::Request>();
+        //     guidedRequest->custom_mode = "GUIDED";
+        //     m_modeClient->async_send_request(guidedRequest);
+        // }
+        if (!m_isManual)
         {
             std::shared_ptr<mavros_msgs::srv::SetMode::Request> guidedRequest = std::make_shared<mavros_msgs::srv::SetMode::Request>();
-            guidedRequest->custom_mode = "GUIDED";
+            guidedRequest->custom_mode = "MANUAL";
             m_modeClient->async_send_request(guidedRequest);
         }
     }
@@ -193,6 +201,7 @@ private:
 
     rclcpp::Client<mavros_msgs::srv::SetMode>::SharedPtr m_modeClient;
     bool m_isGuided;
+    bool m_isManual;
 
     // Send value to the ArduSub
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr m_thrusterPublisher;
